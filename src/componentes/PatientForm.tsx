@@ -1,20 +1,18 @@
-import {useFormState} from "react-dom";
 import {useForm} from "react-hook-form";
-import {normalizeModuleId} from "vite/module-runner";
+import type {PacienteToSave} from "../types";
+import {usePacieteStore} from "../store/store.ts";
 
 export default function PatientForm() {
+    const {addPaciente} = usePacieteStore();
 
-    const {register, handleSubmit, formState: {errors}} = useForm();
-
-    const savePaciente = (data) => {
-        console.log("Guardando paciente")
-        console.log(data)
+    const {register, handleSubmit, formState: {errors}} = useForm<PacienteToSave>();
+    const savePaciente = (data: PacienteToSave) => {
+        addPaciente(data);
     }
 
     return (
         <div className="md:w-1/2 lg:w-2/5 mx-5 font-fjalla">
             <h2 className="font-black text-3xl text-center">Seguimiento Pacientes</h2>
-
             <p className="text-lg mt-5 text-center mb-10">
                 Añade Pacientes y {''}
                 <span className="text-indigo-600 font-bold">Administralos</span>
