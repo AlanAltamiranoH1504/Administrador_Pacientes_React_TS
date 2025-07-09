@@ -1,10 +1,16 @@
 import type {Paciente} from "../types";
 import {formatoFecha} from "../helpers";
+import {usePacieteStore} from "../store/store.ts";
 
 type PacienteDetallesProps = {
     paciente: Paciente
 }
 const PacienteDetalles = ({paciente}: PacienteDetallesProps) => {
+    const {deletePaciente} = usePacieteStore();
+    const eliminacionPaciente = (idPaciente: string) => {
+        deletePaciente(idPaciente);
+    }
+
     return (
         <>
             <div className="mx-5 my-10 px-5 py-10 bg-white shadow-md rounded-xl font-fjalla">
@@ -41,6 +47,9 @@ const PacienteDetalles = ({paciente}: PacienteDetallesProps) => {
                     </button>
                     <button
                         className="flex gap-3 py-2 px-10 bg-red-600 hover:bg-red-700 text-white font-bold uppercase rounded-lg"
+                        onClick={() => {
+                            eliminacionPaciente(paciente.id)
+                        }}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" className="size-6">

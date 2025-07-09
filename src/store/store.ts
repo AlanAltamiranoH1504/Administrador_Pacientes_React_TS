@@ -7,7 +7,7 @@ type PacienteState = {
     addPaciente: (paciente: PacienteToSave) => void,
     deletePaciente: (idPaciente: string) => void,
 }
-export const usePacieteStore = create<PacienteState>((setState) => ({
+export const usePacieteStore = create<PacienteState>((setState, getState) => ({
     pacientes: [],
     addPaciente: (paciente) => {
         const pacienteToSave: Paciente = {
@@ -23,6 +23,8 @@ export const usePacieteStore = create<PacienteState>((setState) => ({
         }))
     },
     deletePaciente: (idPaciente: string) => {
-        console.log(`Eliminando paciente con id: ${idPaciente}`);
+        setState((state) => ({
+            pacientes: state.pacientes.filter((paciente) => paciente.id !== idPaciente)
+        }));
     }
 }));

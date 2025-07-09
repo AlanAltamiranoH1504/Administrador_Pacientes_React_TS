@@ -5,9 +5,10 @@ import {usePacieteStore} from "../store/store.ts";
 export default function PatientForm() {
     const {addPaciente} = usePacieteStore();
 
-    const {register, handleSubmit, formState: {errors}} = useForm<PacienteToSave>();
+    const {register, handleSubmit, formState: {errors}, reset} = useForm<PacienteToSave>();
     const savePaciente = (data: PacienteToSave) => {
         addPaciente(data);
+        reset();
     }
 
     return (
