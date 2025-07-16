@@ -1,14 +1,20 @@
 import type {Paciente} from "../types";
 import {formatoFecha} from "../helpers";
 import {usePacieteStore} from "../store/store.ts";
+import {toast} from "react-toastify";
 
 type PacienteDetallesProps = {
     paciente: Paciente
 }
 const PacienteDetalles = ({paciente}: PacienteDetallesProps) => {
-    const {deletePaciente} = usePacieteStore();
+    const {deletePaciente, getPacienteById} = usePacieteStore();
+
     const eliminacionPaciente = (idPaciente: string) => {
+        toast.warning("Paciente eliminado correctamente!");
         deletePaciente(idPaciente);
+    }
+    const llenarFormularioConPaciente = (idPaciente: string) => {
+        getPacienteById(idPaciente);
     }
 
     return (
@@ -34,9 +40,12 @@ const PacienteDetalles = ({paciente}: PacienteDetallesProps) => {
                     <span className="text-indigo-700 font-normal normal-case">{paciente.sintomas}</span>
                 </p>
 
-                <div className="flex justify-between gap-3 mt-10">
+                <div className="flex flex-col lg:flex-row gap-3 justify-between gap-3 mt-10">
                     <button
-                        className="flex gap-3 py-2 px-10 bg-indigo-600 hover:bg-indigo-700 text-white font-bold uppercase rounded-lg"
+                        className="flex justify-center gap-3 py-2 px-10 bg-indigo-600 hover:bg-indigo-700 text-white font-bold uppercase rounded-lg"
+                        onClick={() => {
+                            llenarFormularioConPaciente(paciente.id)
+                        }}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" className="size-6">
@@ -46,7 +55,7 @@ const PacienteDetalles = ({paciente}: PacienteDetallesProps) => {
                         Editar
                     </button>
                     <button
-                        className="flex gap-3 py-2 px-10 bg-red-600 hover:bg-red-700 text-white font-bold uppercase rounded-lg"
+                        className="flex justify-center gap-3 py-2 px-10 bg-red-600 hover:bg-red-700 text-white font-bold uppercase rounded-lg"
                         onClick={() => {
                             eliminacionPaciente(paciente.id)
                         }}

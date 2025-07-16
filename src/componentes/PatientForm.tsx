@@ -1,15 +1,36 @@
 import {useForm} from "react-hook-form";
-import type {PacienteToSave} from "../types";
+import type {Paciente, PacienteToSave} from "../types";
 import {usePacieteStore} from "../store/store.ts";
+import {useEffect} from "react";
+import {toast} from "react-toastify";
 
 export default function PatientForm() {
-    const {addPaciente} = usePacieteStore();
-
-    const {register, handleSubmit, formState: {errors}, reset} = useForm<PacienteToSave>();
+    const {addPaciente, activeId, pacientes, updatePaciente} = usePacieteStore();
+    const {register, handleSubmit, formState: {errors}, reset, setValue} = useForm<PacienteToSave>();
     const savePaciente = (data: PacienteToSave) => {
-        addPaciente(data);
+        if (activeId) {
+            updatePaciente(data);
+            toast.success("Paciente actualizado correctamente!");
+        } else {
+            addPaciente(data);
+            toast.success("Paciente guardado correctamente!");
+        }
         reset();
     }
+
+    //Llenado de formulario cuando activeId tenga algo
+    useEffect(() => {
+        if (activeId) {
+            const pacienteActivo: Paciente = pacientes.filter((paciente) => {
+                return paciente.id === activeId
+            })[0];
+            setValue("nombre", pacienteActivo.nombre);
+            setValue("propietario", pacienteActivo.propietario);
+            setValue("email", pacienteActivo.email);
+            setValue("alta", pacienteActivo.alta);
+            setValue("sintomas", pacienteActivo.sintomas);
+        }
+    }, [activeId]);
 
     return (
         <div className="md:w-1/2 lg:w-2/5 mx-5 font-fjalla">
@@ -124,7 +145,7 @@ export default function PatientForm() {
                 <input
                     type="submit"
                     className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors rounded-lg"
-                    value='Guardar Paciente'
+                    value={activeId ? "Actualizar Paciente": "Guardar Paciente"}
                 />
             </form>
         </div>
